@@ -10,8 +10,19 @@ connection.socketURL = 'https://muazkhan.com:9001/';
 // if you want audio+video conferencing
 connection.session = {
     audio: true,
-    video: true
+    video: true,
+     data: true
 };
+
+
+connection.onopen = function(event) {
+    connection.send('hello everyone');
+};
+
+connection.onmessage = function(event) {
+    alert(event.userid + ' said: ' + event.data);
+};
+
 
 connection.openOrJoin('your-room-id');
 </script>
