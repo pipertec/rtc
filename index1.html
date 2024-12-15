@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="main.css" />
+	<!-- json2 is included because some browsers doesnt have it (e.g. ie8)	-->
+	<script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>		
+	<script src="easyWebSocket.min.js"></script>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+	<script src="jquery.tmpl.min.js"></script>
+	<script src="jQuery.url.js"></script>
+	
+	<script src="main.js"></script>
+</head>
+<body>
+	<div id="container">
+		<div class="header">
+			<h1>PIPERTEC NETWORK STREAM</h1>
+			<hr/>
+			<div class="statusContainer">
+				<span class="label">Status: </span>
+				<span class="status value">Connecting</span>
+				<span class="label">Channel: </span>
+				<span class="channel value"">Unknown</span>
+			</div>
+			<div class="userContainer">
+				<span class="label">Username: </span>
+				<span class="username value">Unknown</span>
+				<input class="editButton" type="button" value="Edit" />
+			</div>
+		</div>
+		<div class="chatArea">
+		</div>
+		<script class="tmplChatMessage" type="text/x-jquery-tmpl">
+			<div>
+				<span class="username">${username}</span> :
+				<span class="message">${message}</span>
+			</div>
+		</script>
+		<script class="tmplChatJoin" type="text/x-jquery-tmpl">
+			<div>
+				<span class="username">${username}</span>
+				<span>just joined.</span>
+			</div>
+		</script>
+		<script class="tmplChatRename" type="text/x-jquery-tmpl">
+			<div>
+				<span class="oldUsername username">${oldUsername}</span>
+				<span>is renamed as</span>
+				<span class="newUsername username">${newUsername}</span>
+			</div>
+		</script>
+		<div class="footer">
+			<form id="chat-form" action="#">
+				<input class="input" id="chat-input" type="text" />
+				<input class="submit" id="chat-submit" type="submit" value="Send" />
+			</form>
+			<hr/>
+			Set <code>channel</code> to change the channel, and <code>user</code> to change the username
+			(like <a href="?channel=foo&user=bar">this</a>)
+		</div>
+	</div>
+	
+</body>
+</html>
