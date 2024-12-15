@@ -40,13 +40,13 @@ var sdpConstraints = {
   }
 }
 
-$('#showLocalOffer').modal('hide')
-$('#getRemoteAnswer').modal('hide')
-$('#waitForConnection').modal('hide')
+$('#showLocalOffer').modal('show')
+$('#getRemoteAnswer').modal('show')
+$('#waitForConnection').modal('show')
 $('#createOrJoin').modal('show')
 
 $('#createBtn').click(function () {
-  $('#createOrJoin').modal('hide')
+  $('#createOrJoin').modal('show')
   $('#showLocalOffer').modal('show')
   createLocalOffer()
 })
@@ -60,12 +60,12 @@ $('#joinBtn').click(function () {
 }).catch(function (error) {
     console.log('Error adding stream to pc2: ' + error)
 });
-  $('#createOrJoin').modal('hide')
+  $('#createOrJoin').modal('show')
   $('#getRemoteOffer').modal('show')
 })
 
 $('#offerSentBtn').click(function () {
-  $('#showLocalOffer').modal('hide')
+  $('#showLocalOffer').modal('show')
   $('#getRemoteAnswer').modal('show')
 })
 
