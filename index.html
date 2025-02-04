@@ -17,18 +17,4 @@
 })();
 </script>
 <!-- end Google Calendar Appointment Scheduling -->
-<script>
-var connection = new RTCMultiConnection();
 
-// this line is VERY_important
-connection.socketURL = 'https://muazkhan.com:9001/';
-
-// if you want audio+video conferencing
-connection.session = {
-    audio: true,
-    video: true
-     
-};
-
-connection.openOrJoin('your-room-id');
-</script>
