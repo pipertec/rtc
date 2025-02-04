@@ -1,5 +1,5 @@
-
-
+<link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet">
+<script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
 <script src="https://muazkhan.com:9001/dist/RTCMultiConnection.min.js"></script>
 <script src="https://muazkhan.com:9001/socket.io/socket.io.js"></script>
 <script>
@@ -17,6 +17,16 @@ connection.session = {
 
 connection.openOrJoin('your-room-id');
 </script>
-<!-- Google Calendar Appointment Scheduling begin -->
-<iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1LHdWWn7_PyWIRdV8h-vzG6zQBbzPxrznMVK0TegQ8LqHirjceNuOgpl0jsKX_o9bfCE6SKCXp?gv=true" style="border: 0" width="40%" height="300" frameborder="0"></iframe>
-<!-- end Google Calendar Appointment Scheduling -->
+<script>
+(function() {
+  var target = document.currentScript;
+  window.addEventListener('load', function() {
+    calendar.schedulingButton.load({
+      url: 'https://calendar.google.com/calendar/appointments/schedules/AcZssZ1LHdWWn7_PyWIRdV8h-vzG6zQBbzPxrznMVK0TegQ8LqHirjceNuOgpl0jsKX_o9bfCE6SKCXp?gv=true',
+      color: '#039BE5',
+      label: 'Book an appointment',
+      target,
+    });
+  });
+})();
+</script>
