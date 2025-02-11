@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Online Shop</title>
+    <style>
+        body {
+            background: linear-gradient(14.5deg, #f3f4f6, #e9ecef);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1, h2 { 
+            text-align: center;
+            color: #333; /* Professional title */
+        }
+    </style>
+</head>
+<body class="container">
+    
+    <!-- Header -->
+    <header class="text-center">Welcome to Our Online Shop</h1>
+
+    <!-- Product Menu Dropdown -->
+    <div id="productMenu" class="hidden my-8 flex justify-center overflow">
+        <button onclick="closeModal()" aria-label="Cancel" style="width: 40px; height: 60px;">×</button>
+        <ul class="flex space-x-3") data-nav-id="prodMenu"></ul>
+        
+        <!-- Left Side Dropdown -->
+        <div id="navLeft">
+            <span>Select an Item</span>
+            <h2>Navigate to Products</h2>
+            <p>Select a product from the dropdown menus below.</p>
+            
+            <!-- Product Details Section ... -->
+            <button onclick="showDetails()" style="width: 30px; height: 60 px;">☰</button>
+
+    </div>
+
+    <!-- Sidebar with Product Images -->
+    <ul id="productSidebar" class="hidden">
+        <li><a href="#" target="_blank">Product Image</a></li>
+        
+        <li>
+            <h4>Select an Item</h4>
+            <p>Search for products by name or search terms.</p>
+            
+            <!-- Product Details -->
+            </ul>
+
+    </ul>
+
+    <!-- Bottom Section with Key Information -->
+    <div class="text-center">
+        <h2>Could you like to add this product to your cart?</h2>
+        
+        <p>Choose the correct option and click on it.</p>
+        
+        <h3>Important Details</h3>
+        
+        <ul id="productDetails" class="mb-4"></ul>
+
+    </div>
+
+    <!-- Interactive Buttons -->
+    
+    <button onclick="showProductFile()" style="width: 100%; margin-top: 20px;">View Product Files</button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@6.9.4/dist/umd/popper.min.js"></script>
+    
+    <!-- Smooth Button Navigation -->
+    
+    <script>
+        let loadProduct = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (loadProduct) cancel();
+            
+            if (typeof window !== 'undefined' && productFilesDir && file_exists(file)) {
+                loadProduct = true;
+            }
+            
+            // Toggle between show and hide
+            setTimeout(() => {
+                closeModal();
+            }, 500);
+
+        });
+
+        function toggleState(value, updatedValue) {
+            value = !value || updatedValue;
+            
+            if (loadProduct && window.addEventListener('computeChanges', computeChanges)) {
+                cancel(); 
+                window.removeEventListener('computeChanges', computeChanges);
+            } else {
+                closeModal();
+            }
+            
+            loadProduct = file_exists(fileDir + '/prodFile' + value + '.json');
+        }
+
+        
+        function show() { 
+            loadProduct = true;
+            document.querySelector('.productMenu').style.display = 'none';
+        }
+        
+        function cancel() { 
+            loadProduct = false;
+            document.querySelector('.productMenu').style.display = 'auto';
+            closeModal();
+        }
+        
+        function computeChanges(data) {
+            
+        }
+    </script>
+
+</body>
+<body class="container">
+    
+    <!-- Purchase Section -->
+    
+    <div id="purchase" class="my-6">
+        <button onclick="handlePayment()" style="width: 40px; height: 60 px;">Order Now</button>
+        
+        <p>When you click, your order will be processed and payment will complete automatically.</p>
+    </div>
+
+    <!-- Purchase Confirmation Section -->
+    
+    <form id="purchaseForm" class="my-6">
+        Select your preferred payment method.
+        
+        <input type="checkbox" name="payment_method"
+            checked={this purchased}
+            style="width: 100%;">
+            
+        <button type="submit">Process Payment</button>
+    </form>
+
+    <!-- Product Purchase Confirmation -->
+    
+    <div id="paymentForm">
+        Order is successfully processed.
+        
+        <h3>Confirm your purchase.</h3>
+        
+        <!-- Confirmation Link ... -->
+    </div>
+
+</body>
+</html>
