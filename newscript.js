@@ -61,7 +61,7 @@ async function run() {
     ],
   });
 
-  const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
+  const result = await chatSession.sendMessage("what does alt+t do?");
   console.log(result.response.text());
 }
 
