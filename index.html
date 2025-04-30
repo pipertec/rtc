@@ -1,19 +1,68 @@
- <iframe src="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1LHdWWn7_PyWIRdV8h-vzG6zQBbzPxrznMVK0TegQ8LqHirjceNuOgpl0jsKX_o9bfCE6SKCXp?gv=true" style="border: 0" width="50%" height="50%" frameborder="0"></iframe>
-<script src="https://muazkhan.com:9001/dist/RTCMultiConnection.min.js"></script>
-<script src="https://muazkhan.com:9001/socket.io/socket.io.js"></script>
-<script>
-var connection = new RTCMultiConnection();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Kitchen Designer (Simplified)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="designer-container">
+        <div class="sidebar">
+            <h2>Customize Your Kitchen</h2>
+            <div class="option-group">
+                <h3>Layout</h3>
+                <select id="layout-selector">
+                    <option value="l-shape">L-Shape</option>
+                    <option value="u-shape">U-Shape</option>
+                    <option value="island">Island</option>
+                    </select>
+            </div>
 
-// this line is VERY_important
-connection.socketURL = 'https://muazkhan.com:9001/';
+            <div class="option-group">
+                <h3>Cabinets</h3>
+                <select id="cabinet-style">
+                    <option value="shaker">Shaker</option>
+                    <option value="flat-panel">Flat Panel</option>
+                    <option value="raised-panel">Raised Panel</option>
+                    </select>
+                <input type="color" id="cabinet-color" value="#f0f0f0"> <label for="cabinet-color">Color</label>
+            </div>
 
-// if you want audio+video conferencing
-connection.session = {
-    audio: true,
-    video: true
-     
-};
+            <div class="option-group">
+                <h3>Countertops</h3>
+                <select id="countertop-material">
+                    <option value="granite">Granite</option>
+                    <option value="quartz">Quartz</option>
+                    <option value="laminate">Laminate</option>
+                    </select>
+                <input type="color" id="countertop-color" value="#e0e0e0"> <label for="countertop-color">Color</label>
+            </div>
 
-connection.openOrJoin('your-room-id');
-   
-</script>
+            <div class="option-group">
+                <h3>Appliances</h3>
+                <label><input type="checkbox" id="fridge-toggle"> Refrigerator</label><br>
+                <label><input type="checkbox" id="oven-toggle"> Oven/Stove</label><br>
+                <label><input type="checkbox" id="dishwasher-toggle"> Dishwasher</label><br>
+                </div>
+
+            <button id="reset-button">Reset</button>
+        </div>
+
+        <div class="kitchen-view">
+            <div id="kitchen-area">
+                <div id="floor"></div>
+                <div id="walls"></div>
+                <div id="cabinets-container">
+                    </div>
+                <div id="countertops-container">
+                    </div>
+                <div id="appliances-container">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
