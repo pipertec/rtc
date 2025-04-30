@@ -1,195 +1,136 @@
-const typingForm = document.querySelector(".typing-form");
-const chatContainer = document.querySelector(".chat-list");
-const suggestions = document.querySelectorAll(".suggestion");
-const toggleThemeButton = document.querySelector(
-    "#theme-toggle-button"
-);
-const deleteChatButton = document.querySelector(
-    "#delete-chat-button"
-);
-// State variables
-let userMessage = null;
-let isResponseGenerating = false;
-// API configuration
-const API_KEY = "AIzaSyCeEd-j5zzMJnHM0opS3-hKhHrNexMetGI"; // Your API key here
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+document.addEventListener('DOMContentLoaded', () => {
+    const layoutSelector = document.getElementById('layout-selector');
+    const cabinetStyleSelector = document.getElementById('cabinet-style');
+    const cabinetColorPicker = document.getElementById('cabinet-color');
+    const countertopMaterialSelector = document.getElementById('countertop-material');
+    const countertopColorPicker = document.getElementById('countertop-color');
+    const fridgeToggle = document.getElementById('fridge-toggle');
+    const ovenToggle = document.getElementById('oven-toggle');
+    const dishwasherToggle = document.getElementById('dishwasher-toggle');
+    const kitchenArea = document.getElementById('kitchen-area');
+    const cabinetsContainer = document.getElementById('cabinets-container');
+    const countertopsContainer = document.getElementById('countertops-container');
+    const appliancesContainer = document.getElementById('appliances-container');
+    const resetButton = document.getElementById('reset-button');
 
-// Load theme and chat data from local storage on page load
-const loadDataFromLocalstorage = () => {
-    const savedChats = localStorage.getItem("saved-chats");
-    const isLightMode =
-        localStorage.getItem("themeColor") === "light_mode";
-    // Apply the stored theme
-    document.body.classList.toggle("light_mode", isLightMode);
-    toggleThemeButton.innerText = isLightMode
-        ? "dark_mode"
-        : "light_mode";
-    // Restore saved chats or clear the chat container
-    chatContainer.innerHTML = savedChats || "";
-    document.body.classList.toggle("hide-header", savedChats);
-    chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-};
-// Create a new message element and return it
-const createMessageElement = (content, ...classes) => {
-    const div = document.createElement("div");
-    div.classList.add("message", ...classes);
-    div.innerHTML = content;
-    return div;
-};
-// Show typing effect by displaying words one by one
-const showTypingEffect = (
-    text,
-    textElement,
-    incomingMessageDiv
-) => {
-    const words = text.split(" ");
-    let currentWordIndex = 0;
-    const typingInterval = setInterval(() => {
-        // Append each word to the text element with a space
-        textElement.innerText +=
-            (currentWordIndex === 0 ? "" : " ") +
-            words[currentWordIndex++];
-        incomingMessageDiv
-            .querySelector(".icon")
-            .classList.add("hide");
-        // If all words are displayed
-        if (currentWordIndex === words.length) {
-            clearInterval(typingInterval);
-            isResponseGenerating = false;
-            incomingMessageDiv
-                .querySelector(".icon")
-                .classList.remove("hide");
-            localStorage.setItem(
-                "saved-chats",
-                chatContainer.innerHTML
-            ); // Save chats to local storage
+    let currentLayout = 'l-shape';
+    let cabinetColor = '#f0f0f0';
+    let countertopColor = '#e0e0e0';
+    let showFridge = false;
+    let showOven = false;
+    let showDishwasher = false;
+
+    function updateKitchenView() {
+        cabinetsContainer.innerHTML = '';
+        countertopsContainer.innerHTML = '';
+        appliancesContainer.innerHTML = '';
+
+        // Basic layout rendering (very simplified)
+        if (currentLayout === 'l-shape') {
+            createCabinet(20, 20, 150, 80, cabinetColor); // Base cabinet 1
+            createCabinet(20, 100, 80, 80, cabinetColor); // Base cabinet 2
+            createCountertop(20, 20, 150, 80, countertopColor);
+            createCountertop(20, 100, 80, 80, countertopColor);
+        } else if (currentLayout === 'u-shape') {
+            createCabinet(20, 20, 150, 80, cabinetColor);
+            createCabinet(20, 100, 80, 80, cabinetColor);
+            createCabinet(200, 100, 100, 80, cabinetColor);
+            createCountertop(20, 20, 150, 80, countertopColor);
+            createCountertop(20, 100, 80, 80, countertopColor);
+            createCountertop(200, 100, 100, 80, countertopColor);
+        } else if (currentLayout === 'island') {
+            createCabinet(50, 50, 120, 80, cabinetColor); // Island base
+            createCountertop(50, 50, 120, 80, countertopColor);
         }
-        chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-    }, 75);
-};
-// Fetch response from the API based on user message
-const generateAPIResponse = async (incomingMessageDiv) => {
-    const textElement = incomingMessageDiv.querySelector(".text"); // Getting text element
-    try {
-        // Send a POST request to the API with the user's message
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [
-                    {
-                        role: "user",
-                        parts: [{ text: userMessage }],
-                    },
-                ],
-            }),
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error.message);
-        // Get the API response text and remove asterisks from it
-        const apiResponse =
-            data.candidates[0].content.parts[0].text.replace(
-                /\*\*(.*?)\*\*/g,
-                "$1"
-            );
-        showTypingEffect(
-            apiResponse,
-            textElement,
-            incomingMessageDiv
-        ); // Show typing effect
-    } catch (error) {
-        // Handle error
-        isResponseGenerating = false;
-        textElement.innerText = error.message;
-        textElement.parentElement
-            .closest(".message")
-            .classList.add("error");
-    } finally {
-        incomingMessageDiv.classList.remove("loading");
-    }
-};
-// Show a loading animation while waiting for the API response
-const showLoadingAnimation = () => {
-    const html = `<div class="message-content">
-      <img class="avatar" src="./gemini.png" alt="Gemini avatar">
-      <p class="text"></p>
-      <div class="loading-indicator">
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-        <div class="loading-bar"></div>
-      </div>
-    </div>
-    <span onClick="copyMessage(this)" class="icon material-symbols-rounded">content_copy</span>`;
-    const incomingMessageDiv = createMessageElement(
-        html,
-        "incoming",
-        "loading"
-    );
-    chatContainer.appendChild(incomingMessageDiv);
-    chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-    generateAPIResponse(incomingMessageDiv);
-};
-// Copy message text to the clipboard
-const copyMessage = (copyButton) => {
-    const messageText =
-        copyButton.parentElement.querySelector(".text").innerText;
-    navigator.clipboard.writeText(messageText);
-    copyButton.innerText = "done"; // Show confirmation icon
-    setTimeout(() => (copyButton.innerText = "content_copy"), 1000); // Revert icon after 1 second
-};
-// Handle sending outgoing chat messages
-const handleOutgoingChat = () => {
-    userMessage =
-        typingForm.querySelector(".typing-input").value.trim() ||
-        userMessage;
-    if (!userMessage || isResponseGenerating) return; // Exit if there is no message or response is generating
-    isResponseGenerating = true;
-    const html = `<div class="message-content">
-      <img class="avatar" src="./user.png" alt="User avatar">
-      <p class="text"></p>
-    </div>`;
-    const outgoingMessageDiv = createMessageElement(
-        html,
-        "outgoing"
-    );
-    outgoingMessageDiv.querySelector(".text").innerText =
-        userMessage;
-    chatContainer.appendChild(outgoingMessageDiv);
 
-    typingForm.reset(); // Clear input field
-    document.body.classList.add("hide-header");
-    chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to the bottom
-    setTimeout(showLoadingAnimation, 500); // Show loading animation after a delay
-};
-// Toggle between light and dark themes
-toggleThemeButton.addEventListener("click", () => {
-    const isLightMode =
-        document.body.classList.toggle("light_mode");
-    localStorage.setItem(
-        "themeColor",
-        isLightMode ? "light_mode" : "dark_mode"
-    );
-    toggleThemeButton.innerText = isLightMode
-        ? "dark_mode"
-        : "light_mode";
-});
-// Delete all chats from local storage when button is clicked
-deleteChatButton.addEventListener("click", () => {
-    if (confirm("Are you sure you want to delete all the chats?")) {
-        localStorage.removeItem("saved-chats");
-        loadDataFromLocalstorage();
+        if (showFridge) {
+            createAppliance(400, 20, 60, 150, 'Fridge');
+        }
+        if (showOven) {
+            createAppliance(300, 100, 60, 80, 'Oven');
+        }
+        if (showDishwasher) {
+            createAppliance(120, 180, 50, 60, 'Dishwasher');
+        }
     }
-});
-// Set userMessage and handle outgoing chat when a suggestion is clicked
-suggestions.forEach((suggestion) => {
-    suggestion.addEventListener("click", () => {
-        userMessage = suggestion.querySelector(".text").innerText;
-        handleOutgoingChat();
+
+    function createCabinet(x, y, width, height, color) {
+        const cabinet = document.createElement('div');
+        cabinet.classList.add('cabinet');
+        cabinet.style.left = `${x}px`;
+        cabinet.style.top = `${y}px`;
+        cabinet.style.width = `${width}px`;
+        cabinet.style.height = `${height}px`;
+        cabinet.style.backgroundColor = color;
+        cabinetsContainer.appendChild(cabinet);
+    }
+
+    function createCountertop(x, y, width, height, color) {
+        const countertop = document.createElement('div');
+        countertop.classList.add('countertop');
+        countertop.style.left = `${x}px`;
+        countertop.style.top = `${y}px`;
+        countertop.style.width = `${width}px`;
+        countertop.style.height = `${height}px`;
+        countertop.style.backgroundColor = color;
+        countertopsContainer.appendChild(countertop);
+    }
+
+    function createAppliance(x, y, width, height, label) {
+        const appliance = document.createElement('div');
+        appliance.classList.add('appliance');
+        appliance.style.left = `${x}px`;
+        appliance.style.top = `${y}px`;
+        appliance.style.width = `${width}px`;
+        appliance.style.height = `${height}px`;
+        appliance.textContent = label;
+        appliancesContainer.appendChild(appliance);
+    }
+
+    layoutSelector.addEventListener('change', (event) => {
+        currentLayout = event.target.value;
+        updateKitchenView();
     });
+
+    cabinetColorPicker.addEventListener('input', (event) => {
+        cabinetColor = event.target.value;
+        updateKitchenView();
+    });
+
+    countertopColorPicker.addEventListener('input', (event) => {
+        countertopColor = event.target.value;
+        updateKitchenView();
+    });
+
+    fridgeToggle.addEventListener('change', (event) => {
+        showFridge = event.target.checked;
+        updateKitchenView();
+    });
+
+    ovenToggle.addEventListener('change', (event) => {
+        showOven = event.target.checked;
+        updateKitchenView();
+    });
+
+    dishwasherToggle.addEventListener('change', (event) => {
+        showDishwasher = event.target.checked;
+        updateKitchenView();
+    });
+
+    resetButton.addEventListener('click', () => {
+        currentLayout = 'l-shape';
+        cabinetColorPicker.value = '#f0f0f0';
+        countertopColorPicker.value = '#e0e0e0';
+        showFridge = false;
+        showOven = false;
+        showDishwasher = false;
+        layoutSelector.value = 'l-shape';
+        fridgeToggle.checked = false;
+        ovenToggle.checked = false;
+        dishwasherToggle.checked = false;
+        updateKitchenView();
+    });
+
+    // Initial rendering
+    updateKitchenView();
 });
-// Prevent default form submission and handle outgoing chat
-typingForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    handleOutgoingChat();
-});
-loadDataFromLocalstorage();
